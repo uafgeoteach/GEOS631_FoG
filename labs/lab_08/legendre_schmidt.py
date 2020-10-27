@@ -28,7 +28,7 @@ def legendre_schmidt(n, x):
     """
 
     # Input checks and conversion
-    if not (isinstance(n, int) and n >= 0):
+    if not (isinstance(n, (int, np.integer)) and n >= 0):
         raise TypeError('n must be a positive integer')
     x = np.atleast_1d(x)
     if (x < -1).any() or (x > 1).any():
