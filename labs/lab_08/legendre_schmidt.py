@@ -16,11 +16,11 @@ def legendre_schmidt(n, x):
 
     Returns:
         Associated Legendre function values as a NumPy array. The shape
-        of the returned array depends on the size of x:
+        of the returned array depends upon the shape of x:
 
-        * If x is a 1D array, then an array of size (n+1)-by-len(x) is
+        * If x is a 1D array, then an array of shape (n+1)-by-len(x) is
           returned. The entry at index [m, i] is the associated Legendre
-          function of degree n and order m evaluated at x(i).
+          function of degree n and order m evaluated at x[i].
 
         * In general, the output array has one more dimension than x and
           each element [m, i, j, k, ...] contains the associated Legendre
