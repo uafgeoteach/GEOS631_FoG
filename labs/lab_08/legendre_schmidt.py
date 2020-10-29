@@ -54,7 +54,10 @@ def legendre_schmidt(n, x):
     # Compute while normalizing
     for m in range(p_nm.shape[0]):
         if has_pyshtools:
-            p_nm[m, ...] = legendre_lm(l=n, m=m, z=x, normalization='schmidt')
+            plm_array = np.empty(x.shape)
+            for i, z in np.ndenumerate(x):
+                plm_array[i] = legendre_lm(l=n, m=m, z=z, normalization='schmidt')
+            p_nm[m, ...] = plm_array
         else:
             if m > 0:
                 norm = ((-1) ** m) * np.sqrt((2 * np.math.factorial(n - m)) / np.math.factorial(n + m))
