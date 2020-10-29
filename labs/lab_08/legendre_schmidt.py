@@ -1,5 +1,12 @@
 import numpy as np
-from scipy.special import lpmv
+try:
+    from pyshtools.legendre import legendre_lm
+    has_pyshtools = True
+    print('pyshtools.legendre.legendre_lm() will be used to compute associated Legendre functions.')
+except ModuleNotFoundError:
+    from scipy.special import lpmv
+    has_pyshtools = False
+    print('scipy.special.lpmv() will be used to compute associated Legendre functions.')
 
 
 def legendre_schmidt(n, x):
@@ -25,6 +32,13 @@ def legendre_schmidt(n, x):
         * In general, the output array has one more dimension than x and
           each element [m, i, j, k, ...] contains the associated Legendre
           function of degree n and order m evaluated at x[i, j, k, ...].
+
+    Note:
+        At import time, this function will check whether pyshtools is
+        installed, and will use pyshtools.legendre.legendre_lm() instead
+        of scipy.special.lpmv() to compute the associated Legendre
+        functions. lpmv() cannot be used for degrees > 85 due to numerical
+        instabilities, but legendre_lm() is good to about degree 2800.
     """
 
     # Input checks and conversion
@@ -39,10 +53,13 @@ def legendre_schmidt(n, x):
 
     # Compute while normalizing
     for m in range(p_nm.shape[0]):
-        if m > 0:
-            norm = ((-1) ** m) * np.sqrt((2 * np.math.factorial(n - m)) / np.math.factorial(n + m))
+        if has_pyshtools:
+            p_nm[m, ...] = legendre_lm(l=n, m=m, z=x, normalization='schmidt')
         else:
-            norm = 1
-        p_nm[m, ...] = lpmv(m, n, x) * norm  # lpmv() INCLUDES the Condon-Shortley phase factor
+            if m > 0:
+                norm = ((-1) ** m) * np.sqrt((2 * np.math.factorial(n - m)) / np.math.factorial(n + m))
+            else:
+                norm = 1
+            p_nm[m, ...] = lpmv(m, n, x) * norm  # lpmv() INCLUDES the Condon-Shortley phase factor
 
     return p_nm
