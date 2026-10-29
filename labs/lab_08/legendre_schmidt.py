@@ -1,4 +1,5 @@
 import numpy as np
+import math
 try:
     from pyshtools.legendre import legendre_lm
     has_pyshtools = True
@@ -60,7 +61,7 @@ def legendre_schmidt(n, x):
             p_nm[m, ...] = plm_array
         else:
             if m > 0:
-                norm = ((-1) ** m) * np.sqrt((2 * np.math.factorial(n - m)) / np.math.factorial(n + m))
+                norm = ((-1) ** m) * np.sqrt((2 * math.factorial(n - m)) / math.factorial(n + m))
             else:
                 norm = 1
             p_nm[m, ...] = lpmv(m, n, x) * norm  # lpmv() INCLUDES the Condon-Shortley phase factor
